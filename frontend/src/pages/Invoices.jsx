@@ -13,7 +13,7 @@ export default function Invoices() {
   useEffect(() => { fetchInvoices(); fetchClients(); }, []);
   const addLine = () => { setForm({...form, lines: [...form.lines, { description: '', rate: 0, quantity: 1, gst_rate: 18 }]}); };
   const updateLine = (idx, field, val) => { const lines = [...form.lines]; lines[idx][field] = val; setForm({...form, lines}); };
-  const handleCreate = async (e) => { e.preventDefault(); await api.post('/invoices', form); setShowForm(false); fetchInvoices(); };
+  const handleCreate = async (e) => { e.preventDefault(); await api.post('/invoices', form); setShowForm(false); setForm({ client_id: '', invoice_date: '', due_date: '', is_igst: false, lines: [{ description: '', rate: 0, quantity: 1, gst_rate: 18 }] }); fetchInvoices(); };
   const issueInvoice = async (id) => { await api.post(`/invoices/${id}/issue`); fetchInvoices(); };
   const statusColor = (s) => ({draft:'bg-gray-100 text-gray-600',issued:'bg-blue-100 text-blue-700',partially_paid:'bg-yellow-100 text-yellow-700',paid:'bg-green-100 text-green-700',overdue:'bg-red-100 text-red-700'}[s]||'bg-gray-100');
 
