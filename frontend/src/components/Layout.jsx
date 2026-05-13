@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, UserPlus, FileCheck, ListTodo, FileText, LogOut, Menu, X, Building2 } from 'lucide-react';
+import { LayoutDashboard, Users, UserPlus, FileCheck, ListTodo, FileText, LogOut, Menu, X, Building2, Settings } from 'lucide-react';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -9,6 +9,7 @@ const navItems = [
   { path: '/compliance', label: 'Compliance', icon: FileCheck },
   { path: '/tasks', label: 'Tasks', icon: ListTodo },
   { path: '/invoices', label: 'Invoices', icon: FileText },
+  { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function Layout({ children }) {

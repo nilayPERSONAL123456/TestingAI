@@ -100,6 +100,70 @@ def get_invoice(invoice_id: str, db: Session = Depends(get_db), current_user: Us
     return {"invoice": invoice, "lines": lines, "payments": payments}
 
 
+@router.put("/{invoice_id}")
+def update_invoice(invoice_id: str, data: InvoiceCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Edit a draft invoice - replace all lines and recalculate"""
+    invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+    if invoice.status != "draft":
+        raise HTTPException(status_code=400, detail="Only draft invoices can be edited")
+
+    # Recalculate totals
+    sub_total = sum(l.quantity * l.rate for l in data.lines)
+    taxable_value = sub_total
+    total_cgst = total_sgst = total_igst = 0.0
+    for line in data.lines:
+        tax = line.quantity * line.rate * line.gst_rate / 100
+        if data.is_igst:
+            total_igst += tax
+        else:
+            total_cgst += tax / 2
+            total_sgst += tax / 2
+    total = taxable_value + total_cgst + total_sgst + total_igst
+
+    # Update invoice fields
+    invoice.client_id = data.client_id
+    invoice.invoice_date = data.invoice_date
+    invoice.due_date = data.due_date
+    invoice.place_of_supply = data.place_of_supply
+    invoice.sub_total = round(sub_total, 2)
+    invoice.taxable_value = round(taxable_value, 2)
+    invoice.cgst = round(total_cgst, 2)
+    invoice.sgst = round(total_sgst, 2)
+    invoice.igst = round(total_igst, 2)
+    invoice.total = round(total, 2)
+    invoice.balance_due = round(total, 2)
+    invoice.notes = data.notes
+    invoice.terms = data.terms
+    invoice.updated_at = datetime.utcnow()
+
+    # Delete old lines and create new ones
+    db.query(InvoiceLine).filter(InvoiceLine.invoice_id == invoice_id).delete()
+    for line in data.lines:
+        db.add(InvoiceLine(id=str(uuid.uuid4()), invoice_id=invoice.id, description=line.description,
+            hsn_sac=line.hsn_sac, quantity=line.quantity, rate=line.rate,
+            amount=round(line.quantity * line.rate, 2), gst_rate=line.gst_rate))
+    db.commit()
+    db.refresh(invoice)
+    return invoice
+
+
+@router.delete("/{invoice_id}")
+def delete_invoice(invoice_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Delete a draft invoice"""
+    invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+    if invoice.status != "draft":
+        raise HTTPException(status_code=400, detail="Only draft invoices can be deleted")
+    db.query(InvoiceLine).filter(InvoiceLine.invoice_id == invoice_id).delete()
+    db.query(Payment).filter(Payment.invoice_id == invoice_id).delete()
+    db.delete(invoice)
+    db.commit()
+    return {"message": "Invoice deleted"}
+
+
 @router.post("/{invoice_id}/issue")
 def issue_invoice(invoice_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
