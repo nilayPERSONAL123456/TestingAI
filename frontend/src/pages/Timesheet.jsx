@@ -44,7 +44,7 @@ export default function Timesheet() {
     const payload = {
       ...form,
       hours: parseFloat(form.hours),
-      billable: form.billable,
+      billable: form.billable ? "yes" : "no",
     };
     try {
       await api.post('/timesheet', payload);
@@ -53,7 +53,7 @@ export default function Timesheet() {
       fetchEntries();
       fetchAging();
     } catch (err) {
-      alert('Failed: ' + (err.response?.data?.detail || err.message));
+      alert('Failed: ' + (err.response?.data?.detail ? (typeof err.response.data.detail === 'string' ? err.response.data.detail : JSON.stringify(err.response.data.detail)) : err.message));
     }
   };
 
@@ -79,7 +79,7 @@ export default function Timesheet() {
   };
 
   const totalHours = entries.reduce((sum, e) => sum + (parseFloat(e.hours) || 0), 0);
-  const billableHours = entries.filter(e => e.billable).reduce((sum, e) => sum + (parseFloat(e.hours) || 0), 0);
+  const billableHours = entries.filter(e => e.billable === "yes" || e.billable === true).reduce((sum, e) => sum + (parseFloat(e.hours) || 0), 0);
 
   return (
     <div>
@@ -203,8 +203,8 @@ export default function Timesheet() {
                 <td className="px-4 py-3 max-w-[250px] truncate">{entry.description || '-'}</td>
                 <td className="px-4 py-3 font-medium">{parseFloat(entry.hours).toFixed(1)}</td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${entry.billable ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                    {entry.billable ? 'Yes' : 'No'}
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${entry.billable === "yes" || entry.billable === true ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+                    {entry.billable === "yes" || entry.billable === true ? 'Yes' : 'No'}
                   </span>
                 </td>
                 <td className="px-4 py-3">
