@@ -28,6 +28,22 @@ DEFAULT_RULES = [
     {"code": "PF_ECR", "name": "PF ECR Filing", "authority": "PF", "frequency": "monthly", "due_day": 15, "month_offset": 1},
     {"code": "ESI", "name": "ESI Filing", "authority": "ESI", "frequency": "monthly", "due_day": 15, "month_offset": 1},
     {"code": "PT_M", "name": "Professional Tax", "authority": "PT", "frequency": "monthly", "due_day": 15, "month_offset": 1},
+    # Additional compliance rules
+    {"code": "GSTR1_Q", "name": "GSTR-1 Quarterly (QRMP)", "authority": "GST", "frequency": "quarterly", "due_day": 13, "month_offset": 1},
+    {"code": "CMP08", "name": "CMP-08 Quarterly Challan (Composition)", "authority": "GST", "frequency": "quarterly", "due_day": 18, "month_offset": 1},
+    {"code": "GSTR4", "name": "GSTR-4 Annual (Composition)", "authority": "GST", "frequency": "yearly", "due_day": 30, "month_offset": 1},
+    {"code": "GSTR9C", "name": "GSTR-9C Reconciliation (T/O > 5 Cr)", "authority": "GST", "frequency": "yearly", "due_day": 31, "month_offset": 9},
+    {"code": "FORM_3CEAB", "name": "Form 3CEAB (Intl Transactions)", "authority": "IT", "frequency": "yearly", "due_day": 30, "month_offset": 8},
+    {"code": "FORM_15CA", "name": "Form 15CA/15CB (Foreign Remittance)", "authority": "IT", "frequency": "monthly", "due_day": 15, "month_offset": 0},
+    {"code": "MSME_1", "name": "MSME Form 1 (Outstanding Payments)", "authority": "ROC", "frequency": "quarterly", "due_day": 30, "month_offset": 1},
+    {"code": "DPT3", "name": "DPT-3 Annual (Deposits Return)", "authority": "ROC", "frequency": "yearly", "due_day": 30, "month_offset": 3},
+    {"code": "PTRC", "name": "PTRC (Professional Tax - Employer)", "authority": "PT", "frequency": "monthly", "due_day": 28, "month_offset": 1},
+    {"code": "ADV_TAX_Q1", "name": "Advance Tax - Q1 (15 Jun)", "authority": "IT", "frequency": "yearly", "due_day": 15, "month_offset": 3},
+    {"code": "ADV_TAX_Q2", "name": "Advance Tax - Q2 (15 Sep)", "authority": "IT", "frequency": "yearly", "due_day": 15, "month_offset": 6},
+    {"code": "ADV_TAX_Q3", "name": "Advance Tax - Q3 (15 Dec)", "authority": "IT", "frequency": "yearly", "due_day": 15, "month_offset": 9},
+    {"code": "ADV_TAX_Q4", "name": "Advance Tax - Q4 (15 Mar)", "authority": "IT", "frequency": "yearly", "due_day": 15, "month_offset": 12},
+    {"code": "FORM_16", "name": "Form 16 Issuance", "authority": "IT", "frequency": "yearly", "due_day": 15, "month_offset": 3},
+    {"code": "TCS_27EQ", "name": "TCS Return - 27EQ", "authority": "IT", "frequency": "quarterly", "due_day": 15, "month_offset": 1},
 ]
 
 

@@ -9,6 +9,9 @@ import Compliance from './pages/Compliance';
 import Tasks from './pages/Tasks';
 import Invoices from './pages/Invoices';
 import Settings from './pages/Settings';
+import Documents from './pages/Documents';
+import Notices from './pages/Notices';
+import Timesheet from './pages/Timesheet';
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -27,6 +30,9 @@ export default function App() {
         <Route path="/compliance" element={<ProtectedRoute><Compliance /></ProtectedRoute>} />
         <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
         <Route path="/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
+        <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
+        <Route path="/notices" element={<ProtectedRoute><Notices /></ProtectedRoute>} />
+        <Route path="/timesheet" element={<ProtectedRoute><Timesheet /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>

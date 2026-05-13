@@ -104,3 +104,22 @@ def delete_client(client_id: str, db: Session = Depends(get_db), current_user: U
     db.delete(client)
     db.commit()
     return {"message": "Client deleted"}
+
+
+
+class BulkAssign(BaseModel):
+    client_ids: list[str]
+    assigned_to: str
+
+
+@router.post("/bulk-assign")
+def bulk_assign_clients(data: BulkAssign, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    updated = 0
+    for client_id in data.client_ids:
+        client = db.query(Client).filter(Client.id == client_id).first()
+        if client:
+            client.relationship_manager = data.assigned_to
+            client.updated_at = datetime.utcnow()
+            updated += 1
+    db.commit()
+    return {"message": f"{updated} clients assigned", "updated": updated}
